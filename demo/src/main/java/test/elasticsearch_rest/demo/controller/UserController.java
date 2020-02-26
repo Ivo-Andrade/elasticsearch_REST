@@ -5,14 +5,13 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import br.com.looplex.data_access_object.DataAccessObjectService;
-import test.elasticsearch_rest.demo.dao.user.UserDao;
 import test.elasticsearch_rest.demo.model.*;
+import test.elasticsearch_rest.demo.aspects.annotations.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,12 +23,11 @@ public class UserController {
     @Autowired
     DataAccessObjectService userDaoService;
 
-
-
-    public UserController() {
+//    public UserController() {
 
 //        this.userDaoService = new DataAccessObjectService(userRepo);
-    }
+
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<APIResponse> createUser(@RequestBody @Valid User newInstance) {
@@ -55,31 +53,22 @@ public class UserController {
     }
 
     @PutMapping("/update/{id}")
+    @IdObjectAdvice
     public ResponseEntity<APIResponse> updateUser(@PathVariable(value="id") String id, @RequestBody @Valid User transientObject) {
 
-        // TODO: Turn Id - Object check an aspect
-        if(id.equals(transientObject.getUsername())) {
+        userDaoService.update(transientObject);
 
-            userDaoService.update(transientObject);
-
-            return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully updated!"));
-
-        } else 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new APIResponse("Id doesn't match payload!"));
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully updated!"));
             
     }
 
     @DeleteMapping("/delete/{id}")
+    @IdObjectAdvice
     public ResponseEntity<APIResponse> deleteUser(@PathVariable(value="id") String id, @RequestBody @Valid User persistentObject) {
 
-        if(id.equals(persistentObject.getUsername())) {
+        userDaoService.delete(persistentObject);
 
-            userDaoService.delete(persistentObject);
-
-            return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully deleted!"));
-
-        } else 
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new APIResponse("Id doesn't match payload!"));
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully deleted!"));
 
     }
 

@@ -8,8 +8,10 @@ import test.elasticsearch_rest.demo.dao.user.UserDao;
 
 @org.springframework.context.annotation.Configuration
 public class Configuration {
+
     @Bean
     public DataAccessObjectService newDataAccessObjectService(@Autowired @Qualifier("http-final") UserDao userDao){
         return new DataAccessObjectService(userDao);
     }
+
 }
