@@ -4,27 +4,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.elasticsearch.action.update.UpdateRequest;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import test.elasticsearch_rest.demo.exceptions.*;
+import test.elasticsearch_rest.demo.exceptions.enums.AppExceptions;
 import test.elasticsearch_rest.demo.model.ElasticsearchUpdatePayload;
 import test.elasticsearch_rest.demo.model.User;
-
-import javax.validation.constraints.NotBlank;
 
 @Component
 @Qualifier("http-final")
@@ -79,7 +74,7 @@ public class UserDaoElasticHTTPImpl extends UserDao {
 
         if(requestResponse.getBody().get("hits").get("hits").size() > 0)
             return getUser(requestResponse.getBody().get("hits").get("hits").get(0).get("_source").toString());
-        else throw new UserNotFoundException("User not found!");
+        else throw new AppException(AppExceptions.USER_NOT_FOUND);
 
     }
 
@@ -121,7 +116,7 @@ public class UserDaoElasticHTTPImpl extends UserDao {
         try {
             return new ObjectMapper().writeValueAsString(object);
         } catch (JsonProcessingException e) {
-            throw new UserDaoInternalException("JsonProcessingException while converting User object to Json string: " + e.getMessage());
+            throw new AppException(AppExceptions.USER_DAO_INTERNAL);
         }
     }
 
@@ -129,7 +124,7 @@ public class UserDaoElasticHTTPImpl extends UserDao {
         try {
             return new ObjectMapper().readValue(str, User.class);
         } catch (JsonProcessingException e) {
-            throw new UserDaoInternalException("JsonProcessingException while converting string to User object: " + e.getMessage());
+            throw new AppException(AppExceptions.USER_DAO_INTERNAL);
         }
     }
 

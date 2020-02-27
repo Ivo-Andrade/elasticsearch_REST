@@ -1,19 +1,14 @@
 package test.elasticsearch_rest.demo.dao.user;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.web.client.HttpClientErrorException;
-import test.elasticsearch_rest.demo.exceptions.UserDaoInternalException;
-import test.elasticsearch_rest.demo.exceptions.UserNotFoundException;
+import test.elasticsearch_rest.demo.exceptions.AppException;
 import test.elasticsearch_rest.demo.model.User;
 
-import javax.validation.constraints.Null;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 public class TestUserDaoElasticHTTPImpl {
 
@@ -64,18 +59,18 @@ public class TestUserDaoElasticHTTPImpl {
     public void testFindAll() {
 
         User newUser1 = new User();
-        newUser1.setUsername("testFindAll_1");
-        newUser1.setPassword("testFindAll_1");
+        newUser1.setUsername("testFindAll1");
+        newUser1.setPassword("testFindAll1");
         newUser1.setEmail("test@test.user");
 
         User newUser2 = new User();
-        newUser2.setUsername("testFindAll_2");
-        newUser2.setPassword("testFindAll_2");
+        newUser2.setUsername("testFindAll2");
+        newUser2.setPassword("testFindAll2");
         newUser2.setEmail("test@test.user");
 
         User newUser3 = new User();
-        newUser3.setUsername("testFindAll_3");
-        newUser3.setPassword("testFindAll_3");
+        newUser3.setUsername("testFindAll3");
+        newUser3.setPassword("testFindAll3");
         newUser3.setEmail("test@test.user");
 
         new UserDaoElasticHTTPImpl().create(newUser1);
@@ -100,25 +95,25 @@ public class TestUserDaoElasticHTTPImpl {
         newUser.setUsername("testFindByIdWithExistingId");
         newUser.setPassword("testFindByIdWithExistingId");
         newUser.setEmail("test@test.user");
-//        new UserDaoElasticHTTPImpl().create(newUser);
+        new UserDaoElasticHTTPImpl().create(newUser);
 
         try {
             Assertions.assertEquals(new UserDaoElasticHTTPImpl().findById("testFindByIdWithExistingId"), newUser);
         } finally {
-//            new UserDaoElasticHTTPImpl().delete(newUser);
+            new UserDaoElasticHTTPImpl().delete(newUser);
         }
 
     }
 
     @Test
     public void testFindByIdWithNonExistingId() {
-        Assertions.assertThrows(UserNotFoundException.class, () -> new UserDaoElasticHTTPImpl().findById("testFindByIdWithNonExistingId"));
+        Assertions.assertThrows(AppException.class, () -> new UserDaoElasticHTTPImpl().findById("testFindByIdWithNonExistingId"));
     }
 
     @Test
     public void testFindByIdWithNullId() {
         // TODO: NullPtnException ?
-        Assertions.assertThrows(UserNotFoundException.class, () -> new UserDaoElasticHTTPImpl().findById(null));
+        Assertions.assertThrows(AppException.class, () -> new UserDaoElasticHTTPImpl().findById(null));
     }
 
     @Test
@@ -132,12 +127,12 @@ public class TestUserDaoElasticHTTPImpl {
         newUser.setEmail("test@test.user");
 
         try {
-//            new UserDaoElasticHTTPImpl().create(newUser);
+            new UserDaoElasticHTTPImpl().create(newUser);
             newUser.setPassword("testUpdateWithExistingUser_newInfo");
             new UserDaoElasticHTTPImpl().update(newUser);
             Assertions.assertEquals(new UserDaoElasticHTTPImpl().findById("testUpdateWithExistingUser"), newUser);
         } finally {
-//            new UserDaoElasticHTTPImpl().delete(newUser);
+            new UserDaoElasticHTTPImpl().delete(newUser);
         }
 
     }
@@ -172,7 +167,7 @@ public class TestUserDaoElasticHTTPImpl {
         try {
             new UserDaoElasticHTTPImpl().create(newUser);
             new UserDaoElasticHTTPImpl().delete(newUser);
-            Assertions.assertThrows(UserNotFoundException.class, () -> new UserDaoElasticHTTPImpl().findById("testDeleteWithExistingUser"));
+            Assertions.assertThrows(AppException.class, () -> new UserDaoElasticHTTPImpl().findById("testDeleteWithExistingUser"));
         } finally {
 
         }
@@ -230,7 +225,7 @@ public class TestUserDaoElasticHTTPImpl {
     public void testSetPayloadWithNullObject() {
 
         Assertions.assertEquals(new UserDaoElasticHTTPImpl().setPayload(null)
-                , null);
+                , "null");
 
     }
 
@@ -248,7 +243,7 @@ public class TestUserDaoElasticHTTPImpl {
 
     @Test
     public void testGetUserWithInvalidString() {
-        Assertions.assertThrows(UserDaoInternalException.class, () -> new UserDaoElasticHTTPImpl().getUser("{\"incorrect-username\":\"testGetUserWithValidString\",\"incorrect-password\":\"testGetUserWithValidString\",\"incorrect-email\":\"test@test.user\"}"));
+        Assertions.assertThrows(AppException.class, () -> new UserDaoElasticHTTPImpl().getUser("{\"incorrect-username\":\"testGetUserWithValidString\",\"incorrect-password\":\"testGetUserWithValidString\",\"incorrect-email\":\"test@test.user\"}"));
     }
 
     @Test

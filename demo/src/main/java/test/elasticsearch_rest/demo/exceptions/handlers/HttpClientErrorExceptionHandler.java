@@ -1,19 +1,23 @@
 package test.elasticsearch_rest.demo.exceptions.handlers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
-import test.elasticsearch_rest.demo.model.APIResponse;
+import test.elasticsearch_rest.demo.exceptions.AppException;
+import test.elasticsearch_rest.demo.exceptions.enums.AppExceptions;
 
 @ControllerAdvice
-public class HttpClientErrorExceptionHandler
-    extends ResponseEntityExceptionHandler
-{
+public class HttpClientErrorExceptionHandler {
+
     @ExceptionHandler(value = { HttpClientErrorException.class })
-    protected ResponseEntity<APIResponse> handleHttpClientErrorException(HttpClientErrorException e, WebRequest request ){
-        return ResponseEntity.status(e.getStatusCode()).body(new APIResponse("There was an HttpClientErrorException accessing the database: "+ e.getMessage()));
+    protected ResponseEntity handleHttpClientErrorException(HttpClientErrorException e){
+        if(e.getStatusCode().equals(HttpStatus.CONFLICT))
+            return ResponseEntity.status(AppExceptions.USER_DAO_CONFLICT.getStatus()).body(new AppException(AppExceptions.USER_DAO_CONFLICT));
+        else if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
+            return ResponseEntity.status(AppExceptions.USER_NOT_FOUND.getStatus()).body(new AppException(AppExceptions.USER_NOT_FOUND));
+        else
+        return ResponseEntity.status(AppExceptions.USER_DAO_INTERNAL.getStatus()).body(new AppException(AppExceptions.USER_DAO_INTERNAL));
     }
 }

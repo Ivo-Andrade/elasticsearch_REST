@@ -30,41 +30,45 @@ public class UserController {
 //    }
 
     @PostMapping("/create")
-    public ResponseEntity<APIResponse> createUser(@RequestBody @Valid User newInstance) {
+    public ResponseEntity createUser(@RequestBody @Valid User newInstance) {
 
         userDaoService.create(newInstance);
-        
+
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully created!"));
 
     }
 
     @GetMapping("")
-    public List<User> listAllUsers(){
+    public ResponseEntity listAllUsers(){
 
-        return (List<User>)(List<?>) userDaoService.findAll();
+        List<User> users = (List<User>)(List<?>) userDaoService.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse(users.size() + " users found!", users));
 
     }
 
     @GetMapping("/id/{id}")
-    public User findUser(@PathVariable(value="id") String id) {
+    public ResponseEntity findUser(@PathVariable(value="id") String id) {
 
-        return (User) userDaoService.findById(id);
+        User user = (User) userDaoService.findById(id);
+
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User found!", user));
 
     }
 
     @PutMapping("/update/{id}")
     @IdObjectAdvice
-    public ResponseEntity<APIResponse> updateUser(@PathVariable(value="id") String id, @RequestBody @Valid User transientObject) {
+    public ResponseEntity updateUser(@PathVariable(value="id") String id, @RequestBody @Valid User transientObject) {
 
-        userDaoService.update(transientObject);
+        User updatedUser = (User) userDaoService.update(transientObject);
 
-        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully updated!"));
+        return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully updated!", updatedUser));
             
     }
 
     @DeleteMapping("/delete/{id}")
     @IdObjectAdvice
-    public ResponseEntity<APIResponse> deleteUser(@PathVariable(value="id") String id, @RequestBody @Valid User persistentObject) {
+    public ResponseEntity deleteUser(@PathVariable(value="id") String id, @RequestBody @Valid User persistentObject) {
 
         userDaoService.delete(persistentObject);
 

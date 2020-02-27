@@ -1,13 +1,13 @@
 package test.elasticsearch_rest.demo;
 
-import org.springframework.beans.factory.annotation.Value;
+//import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 
 // import java.time.Duration;
 
-import org.elasticsearch.client.RestHighLevelClient;
-import org.springframework.data.elasticsearch.client.ClientConfiguration;
-import org.springframework.data.elasticsearch.client.RestClients;
+//import org.elasticsearch.client.RestHighLevelClient;
+//import org.springframework.data.elasticsearch.client.ClientConfiguration;
+//import org.springframework.data.elasticsearch.client.RestClients;
 // import org.springframework.http.HttpHeaders;
 
 @Configuration

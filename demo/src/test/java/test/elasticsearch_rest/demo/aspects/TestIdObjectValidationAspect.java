@@ -2,7 +2,7 @@ package test.elasticsearch_rest.demo.aspects;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import test.elasticsearch_rest.demo.exceptions.IdObjectValidationException;
+import test.elasticsearch_rest.demo.exceptions.AppException;
 import test.elasticsearch_rest.demo.model.User;
 
 public class TestIdObjectValidationAspect {
@@ -18,7 +18,7 @@ public class TestIdObjectValidationAspect {
     public void testIdUpdateObjectValidationWithInvalidInput() {
         User newUser = new User();
         newUser.setUsername("testId");
-        Assertions.assertThrows(IdObjectValidationException.class, () -> new IdObjectValidationAspect().idDeleteObjectValidation(null, "testDifferentId", newUser));
+        Assertions.assertThrows(AppException.class, () -> new IdObjectValidationAspect().idDeleteObjectValidation(null, "testDifferentId", newUser));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class TestIdObjectValidationAspect {
     @Test
     public void testIdUpdateObjectValidationWithNullUsername() {
         User newUser = new User();
-        Assertions.assertThrows(IdObjectValidationException.class, () -> new IdObjectValidationAspect().idDeleteObjectValidation(null, "testId", newUser));
+        Assertions.assertThrows(AppException.class, () -> new IdObjectValidationAspect().idDeleteObjectValidation(null, "testId", newUser));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TestIdObjectValidationAspect {
     public void testIdDeleteObjectValidationWithInvalidInput() {
         User newUser = new User();
         newUser.setUsername("testId");
-        Assertions.assertThrows(IdObjectValidationException.class, () -> new IdObjectValidationAspect().idUpdateObjectValidation(null, "testDifferentId", newUser));
+        Assertions.assertThrows(AppException.class, () -> new IdObjectValidationAspect().idUpdateObjectValidation(null, "testDifferentId", newUser));
     }
 
     @Test
@@ -70,7 +70,7 @@ public class TestIdObjectValidationAspect {
     @Test
     public void testIdDeleteObjectValidationWithNullUsername() {
         User newUser = new User();
-        Assertions.assertThrows(IdObjectValidationException.class, () -> new IdObjectValidationAspect().idUpdateObjectValidation(null, "testId", newUser));
+        Assertions.assertThrows(AppException.class, () -> new IdObjectValidationAspect().idUpdateObjectValidation(null, "testId", newUser));
     }
 
 }
