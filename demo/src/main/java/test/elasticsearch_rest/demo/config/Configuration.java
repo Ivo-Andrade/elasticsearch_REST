@@ -1,5 +1,6 @@
 package test.elasticsearch_rest.demo.config;
 
+import br.com.looplex.ElasticsearchSecurityDAOService;
 import br.com.looplex.data_access_object.DataAccessObjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,11 @@ public class Configuration {
     @Bean
     public DataAccessObjectService newDataAccessObjectService(@Autowired @Qualifier("http-final") UserDao userDao){
         return new DataAccessObjectService(userDao);
+    }
+
+    @Bean
+    public ElasticsearchSecurityDAOService newElasticsearchSecurityDAOService() {
+        return new ElasticsearchSecurityDAOService();
     }
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import br.com.looplex.ElasticsearchSecurityDAOService;
+import br.com.looplex.models.ElasticsearchUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +23,7 @@ public class UserController {
 //    UserDao userRepo;
 
     @Autowired
-    DataAccessObjectService userDaoService;
+    ElasticsearchSecurityDAOService userDaoService;
 
 //    public UserController() {
 
@@ -30,7 +32,7 @@ public class UserController {
 //    }
 
     @PostMapping("/create")
-    public ResponseEntity createUser(@RequestBody @Valid User newInstance) {
+    public ResponseEntity createUser(@RequestBody @Valid ElasticsearchUser newInstance) {
 
         userDaoService.create(newInstance);
 
@@ -50,25 +52,25 @@ public class UserController {
     @GetMapping("/id/{id}")
     public ResponseEntity findUser(@PathVariable(value="id") String id) {
 
-        User user = (User) userDaoService.findById(id);
+        ElasticsearchUser user = (ElasticsearchUser) userDaoService.findById(id);
 
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User found!", user));
 
     }
 
     @PutMapping("/update/{id}")
-    @IdObjectAdvice
-    public ResponseEntity updateUser(@PathVariable(value="id") String id, @RequestBody @Valid User transientObject) {
+    @IdEqualsSentObjectIdAdvice
+    public ResponseEntity updateUser(@PathVariable(value="id") String id, @RequestBody @Valid ElasticsearchUser transientObject) {
 
-        User updatedUser = (User) userDaoService.update(transientObject);
+        ElasticsearchUser updatedUser = (ElasticsearchUser) userDaoService.update(transientObject);
 
         return ResponseEntity.status(HttpStatus.OK).body(new APIResponse("User successfully updated!", updatedUser));
             
     }
 
     @DeleteMapping("/delete/{id}")
-    @IdObjectAdvice
-    public ResponseEntity deleteUser(@PathVariable(value="id") String id, @RequestBody @Valid User persistentObject) {
+    @SentObjectMatchesIdObjectAdvice
+    public ResponseEntity deleteUser(@PathVariable(value="id") String id, @RequestBody @Valid ElasticsearchUser persistentObject) {
 
         userDaoService.delete(persistentObject);
 

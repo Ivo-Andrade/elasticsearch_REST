@@ -23,6 +23,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -39,7 +40,13 @@
 			<artifactId>data_access_object</artifactId>
 			<version>1.0-SNAPSHOT</version>
 		</dependency>
-		
+
+		<dependency>
+			<groupId>br.com.looplex</groupId>
+			<artifactId>elasticsearch_SecurityDAO</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>

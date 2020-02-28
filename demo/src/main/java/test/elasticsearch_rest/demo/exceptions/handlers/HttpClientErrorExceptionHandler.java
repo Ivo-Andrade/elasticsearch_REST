@@ -17,7 +17,9 @@ public class HttpClientErrorExceptionHandler {
             return ResponseEntity.status(AppExceptions.USER_DAO_CONFLICT.getStatus()).body(new AppException(AppExceptions.USER_DAO_CONFLICT));
         else if(e.getStatusCode().equals(HttpStatus.NOT_FOUND))
             return ResponseEntity.status(AppExceptions.USER_NOT_FOUND.getStatus()).body(new AppException(AppExceptions.USER_NOT_FOUND));
-        else
-        return ResponseEntity.status(AppExceptions.USER_DAO_INTERNAL.getStatus()).body(new AppException(AppExceptions.USER_DAO_INTERNAL));
+        else{
+            e.printStackTrace();
+            return ResponseEntity.status(AppExceptions.USER_DAO_INTERNAL.getStatus()).body(new AppException(AppExceptions.USER_DAO_INTERNAL));
+        }
     }
 }
